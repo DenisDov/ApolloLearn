@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, Button, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { Query } from 'react-apollo';
@@ -21,11 +21,13 @@ const PostsQuery = () => (
     {({ loading, error, data }) => {
       if (loading) return <Text>Loading...</Text>;
       if (error) return <Text>Error :(</Text>;
-      return data.allPosts.map(({ id, title }) => (
-        <View key={id}>
-          <Text>{title}</Text>
-        </View>
-      ));
+      return (
+        <FlatList
+          data={data.allPosts}
+          renderItem={({ item }) => <Text>{item.title}</Text>}
+          keyExtractor={item => item.id}
+        />
+      );
     }}
   </Query>
 );
