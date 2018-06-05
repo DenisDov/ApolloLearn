@@ -1,7 +1,13 @@
 import React, { Component } from 'react';
+import { ApolloProvider } from 'react-apollo';
+import ApolloClient from 'apollo-boost';
 import EStyleSheet from 'react-native-extended-stylesheet';
 
 import PostsNavigator from './screens';
+
+const client = new ApolloClient({
+  uri: 'https://api.graph.cool/simple/v1/cji1nnnyw8hia0115y4ro03xr',
+});
 
 EStyleSheet.build({
   $main: '#129F67',
@@ -10,7 +16,11 @@ EStyleSheet.build({
 
 class App extends Component {
   render() {
-    return <PostsNavigator />;
+    return (
+      <ApolloProvider client={client}>
+        <PostsNavigator />
+      </ApolloProvider>
+    );
   }
 }
 

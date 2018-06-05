@@ -1,12 +1,14 @@
 import React, { Component } from 'react';
-import { View, Text } from 'react-native';
+
+import { Container } from './../components/Container';
+import Post from './../components/Post/Post';
 
 export default class PostsScreen extends Component {
   render() {
     return (
-      <View>
-        <Text> PostsScreen </Text>
-      </View>
+      <Container>
+        <Post title="wkhfjkdwhfjkh" />
+      </Container>
     );
   }
 }
