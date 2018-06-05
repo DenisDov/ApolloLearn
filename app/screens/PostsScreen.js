@@ -7,7 +7,7 @@ export default class PostsScreen extends Component {
   render() {
     return (
       <Container>
-        <Post title="wkhfjkdwhfjkh" />
+        <Post title="My first Apollo app 🚀" />
       </Container>
     );
   }

@@ -14,6 +14,28 @@ EStyleSheet.build({
   $transparent: 'rgba(0,0,0,0)',
 });
 
+// client
+//   .query({
+//     query: gql`
+//       {
+//         allPosts {
+//           id
+//           title
+//         }
+//       }
+//     `,
+//   })
+//   .then(result => console.log(result));
+
+// // const postsQuery = gql`
+// //   {
+// //     allPosts {
+// //       id
+// //       title
+// //     }
+// //   }
+// // `;
+
 class App extends Component {
   render() {
     return (
