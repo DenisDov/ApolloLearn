@@ -1,14 +1,44 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+
+import { graphql } from 'react-apollo';
+import gql from 'graphql-tag';
 
 import { Container } from './../components/Container';
-import Post from './../components/Post/Post';
+import { Loader } from './../components/Loader';
+import PostEl from './../components/Post/Post';
 
-export default class PostsScreen extends Component {
+class PostsScreen extends Component {
   render() {
+    const { Post, loading } = this.props;
+    if (loading) return <Loader />;
     return (
       <Container>
-        <Post title="My first Apollo app 🚀" />
+        <PostEl title={`Post id: ${Post.id}`} message={Post.title} />
       </Container>
     );
   }
 }
+
+PostsScreen.propTypes = {
+  Post: PropTypes.object,
+  loading: PropTypes.bool,
+};
+
+const postDetailQuery = gql`
+  query Post($id: ID!) {
+    Post(id: $id) {
+      id
+      title
+    }
+  }
+`;
+
+export default graphql(postDetailQuery, {
+  props: ({ data }) => ({ ...data }),
+  options: ({ navigation }) => ({
+    variables: {
+      id: navigation.state.params.id,
+    },
+  }),
+})(PostsScreen);

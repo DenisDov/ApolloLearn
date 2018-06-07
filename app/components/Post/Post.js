@@ -2,14 +2,16 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import PropTypes from 'prop-types';
 
-const Post = ({ title }) => (
+const PostEl = ({ title, message }) => (
   <View>
     <Text>{title}</Text>
+    <Text>{message}</Text>
   </View>
 );
 
-Post.propTypes = {
+PostEl.propTypes = {
   title: PropTypes.string,
+  message: PropTypes.string,
 };
 
-export default Post;
+export default PostEl;

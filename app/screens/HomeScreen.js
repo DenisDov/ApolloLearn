@@ -1,61 +1,55 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, Text, Button, FlatList } from 'react-native';
+import { View, TouchableOpacity, Text, FlatList } from 'react-native';
 import PropTypes from 'prop-types';
+import EStyleSheet from 'react-native-extended-stylesheet';
 
-import { Query } from 'react-apollo';
+import { graphql } from 'react-apollo';
 import gql from 'graphql-tag';
 
-import { Container } from './../components/Container';
+import { Loader } from './../components/Loader';
 
-const GET_POSTS = gql`
-  {
-    allPosts {
-      id
-      title
-    }
-  }
-`;
+const styles = EStyleSheet.create({
+  post: {
+    padding: 16,
+    backgroundColor: 'white',
+    borderWidth: 0.5,
+    borderColor: '#ddd',
+    borderRadius: 5,
+    marginTop: 10,
+    '@media ios': {
+      shadowColor: 'rgba(0,0,0, .4)',
+      shadowOffset: { height: 1, width: 1 },
+      shadowOpacity: 0.5,
+      shadowRadius: 1,
+    },
+    '@media android': {
+      elevation: 2,
+    },
+  },
+});
 
-const PostsQuery = () => (
-  <Query query={GET_POSTS}>
-    {({ loading, error, data }) => {
-      if (loading) return <Text>Loading...</Text>;
-      if (error) return <Text>Error :(</Text>;
-      return (
+class HomeScreen extends Component {
+  render() {
+    const {
+      allPosts, loading, error, navigation,
+    } = this.props;
+    return (
+      <View style={{ flex: 1, paddingHorizontal: 16 }}>
+        {loading && <Loader />}
+        {error && <Text style={{ textAlign: 'center' }}>{`Error!: ${error}`}</Text>}
         <FlatList
-          data={data.allPosts}
+          data={allPosts}
           renderItem={({ item }) => (
             <TouchableOpacity
-              onPress={() => console.log('press post id: ', item.id)}
-              style={{
-                padding: 16,
-                backgroundColor: 'white',
-                marginBottom: 10,
-                borderWidth: 0.5,
-                borderColor: '#ddd',
-                borderRadius: 5,
-              }}
+              onPress={() => navigation.navigate('PostsScreen', { id: item.id })}
+              style={styles.post}
             >
               <Text>{item.title}</Text>
             </TouchableOpacity>
           )}
           keyExtractor={item => item.id}
         />
-      );
-    }}
-  </Query>
-);
-
-class HomeScreen extends Component {
-  goToPost = () => {
-    this.props.navigation.navigate('PostsScreen');
-  };
-  render() {
-    return (
-      <Container>
-        <PostsQuery />
-        <Button title="To Posts" onPress={this.goToPost} />
-      </Container>
+      </View>
     );
   }
 }
@@ -64,6 +58,20 @@ HomeScreen.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
   }),
+  allPosts: PropTypes.array,
+  loading: PropTypes.bool,
+  error: PropTypes.string,
 };
 
-export default HomeScreen;
+const getPostsQuery = gql`
+  {
+    allPosts {
+      id
+      title
+    }
+  }
+`;
+
+export default graphql(getPostsQuery, {
+  props: ({ data }) => ({ ...data }),
+})(HomeScreen);
