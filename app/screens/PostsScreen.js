@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { SafeAreaView, ScrollView } from 'react-native';
 import PropTypes from 'prop-types';
 
 import { graphql } from 'react-apollo';
@@ -13,9 +14,13 @@ class PostsScreen extends Component {
     const { Post, loading } = this.props;
     if (loading) return <Loader />;
     return (
-      <Container>
-        <PostEl title={`Post id: ${Post.id}`} message={Post.title} />
-      </Container>
+      <SafeAreaView>
+        <ScrollView>
+          <Container>
+            <PostEl title={Post.title} description={Post.description} img={Post.imgUrl} />
+          </Container>
+        </ScrollView>
+      </SafeAreaView>
     );
   }
 }
@@ -30,6 +35,8 @@ const postDetailQuery = gql`
     Post(id: $id) {
       id
       title
+      imgUrl
+      description
     }
   }
 `;
